@@ -3,38 +3,52 @@ import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 
 class App extends React.Component {
-  constructor(){
-    super();
-    this.state = {a: ''}
+  constructor(props) {
+    super(props);
+    this.state = {val: 0}
+    this.update = this.update.bind(this)
   }
   update(){
-    this.setState({
-      a: ReactDOM.findDOMNode(this.a).value,
-      b: this.refs.b.value 
-    })
+    this.setState({val: this.state.val + 1})
+  }
+  
+  componentWillMount() {
+    console.log('componentWillMount')
+    this.setState({m: 2})
+  }
+  
+  render(){
+    console.log('render');
+    return <button onClick={this.update}>{this.state.val * this.state.m}</button>
+  }
+  componentDidMount() {
+    console.log('componentDidMount')
+    this.inc = setInterval(this.update, 500)
+  }
+
+  componentWillUnmount(){
+    console.log('componentWillUnmount')
+    clearInterval(this.inc)
+  }
+  
+}
+
+class Wrapper extends React.Component {
+  mount(){
+    ReactDOM.render(<App />, document.getElementById('a'))
+  }
+  unmount(){
+    ReactDOM.unmountComponentAtNode(document.getElementById('a'))
   }
   render(){
     return (
       <div>
-        <Input
-          ref={ component => this.a = component }
-          update={this.update.bind(this)}
-        /> {this.state.a}
-        <hr/>
-        <input
-          ref="b"
-          type="text"
-          onChange={this.update.bind(this)}
-        /> {this.state.b}
+        <button onClick={this.mount.bind(this)}>Mount</button>
+        <button onClick={this.unmount.bind(this)}>UnMount</button>
+        <div id="a"></div>
       </div>
     )
   }
 }
 
-class Input extends React.Component {
-  render(){
-    return <input type="text" onChange={this.props.update}/>
-  }
-}
-
-export default App
+export default Wrapper
