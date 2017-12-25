@@ -28,9 +28,9 @@ module.exports = {
             "error",
             "single"
         ],
-        "semi": [
-            "error",
-            "always"
-        ]
+        // "semi": [
+        //     "error",
+        //     "never"
+        // ]
     }
 };
